@@ -2,6 +2,7 @@ node_modules/
 build/
 dist/
 coverage/
+media/
 .DS_Store
 *.log
 .env*
@@ -13,3 +14,9 @@ coverage/
 .vscode/
 
 features.md
+
+# Windows & Tooling caches
+Thumbs.db
+.eslintcache
+*.tsbuildinfo
+dist-ssr/

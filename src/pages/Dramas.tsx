@@ -1,19 +1,10 @@
-import { Search, Filter, Play, Star } from 'lucide-react';
+import { Search, Filter, Play, Star, Tv, BookOpen, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const DRAMAS = [
-  { id: 1, title: 'Токкэби (Гоблин)', year: 2016, rating: 4.9, tags: ['Фэнтези', 'Романтика', 'Драма'], image: '/pics/Guardian The Lonely and Great God.png' },
-  { id: 2, title: 'Аварийная посадка любви', year: 2019, rating: 4.8, tags: ['Романтика', 'Комедия'], image: 'https://picsum.photos/seed/crash/400/600' },
-  { id: 3, title: 'Итэвон Класс', year: 2020, rating: 4.7, tags: ['Драма', 'Бизнес'], image: 'https://picsum.photos/seed/itaewon/400/600' },
-  { id: 4, title: 'Винченцо', year: 2021, rating: 4.8, tags: ['Криминал', 'Комедия'], image: 'https://picsum.photos/seed/vincenzo/400/600' },
-  { id: 5, title: 'Слава', year: 2022, rating: 4.9, tags: ['Триллер', 'Месть'], image: 'https://picsum.photos/seed/glory/400/600' },
-  { id: 6, title: 'Алхимия душ', year: 2022, rating: 4.8, tags: ['Фэнтези', 'Исторический'], image: 'https://picsum.photos/seed/alchemy/400/600' },
-];
+import { DRAMAS } from '../data/dramas';
 
 export default function Dramas() {
   return (
     <div className="p-8 space-y-8 relative">
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-transparent dark:bg-brand-cyan/10 rounded-full blur-3xl animate-blob pointer-events-none" style={{ animationDelay: '3s' }} />
       <div className="flex justify-between items-center relative z-10">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Каталог дорам</h1>
         <div className="flex gap-4">
@@ -40,29 +31,80 @@ export default function Dramas() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {DRAMAS.map(drama => (
-          <Link key={drama.id} to={`/player/${drama.id}`} className="group block">
-            <div className="relative aspect-[2/3] rounded-2xl overflow-hidden mb-3 bg-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-slate-200/50 dark:ring-slate-800/50 group-hover:shadow-[0_0_30px_-5px_rgba(0,184,169,0.3)] transition-shadow duration-500">
-              <img src={drama.image} alt={drama.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-brand-cyan text-white flex items-center justify-center shadow-lg shadow-brand-cyan/30 transform scale-75 group-hover:scale-100 transition-transform">
-                  <Play className="w-5 h-5 ml-1" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {DRAMAS.map(drama => {
+          const totalEpisodes = drama.episodes.length;
+          const wordsLearned = drama.episodes.reduce((sum, ep) => sum + (ep.wordsLearned || 0), 0);
+          const phrasesLearned = Math.floor(wordsLearned / 5);
+
+          return (
+            <Link key={drama.id} to={`/dramas/${drama.id}`} className="group block bg-[#13141f] border border-slate-800/80 rounded-[28px] overflow-hidden hover:shadow-[0_8px_30px_-5px_rgba(0,184,169,0.2)] hover:border-brand-cyan/40 transition-all duration-500 hover:-translate-y-1">
+              <div className="relative aspect-[4/5] overflow-hidden m-2 rounded-[20px] isolate bg-slate-900">
+                <img src={drama.image} alt={drama.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#13141f]/80 via-transparent to-black/60 opacity-80" />
+                
+                {/* Rating at Top Right */}
+                <div className="absolute top-4 right-4 z-20">
+                  <div className="px-2.5 py-1 rounded-[10px] bg-black/40 backdrop-blur-md text-white font-bold flex items-center gap-1.5 shadow-sm border border-white/10 flex-shrink-0">
+                    <Star className="w-4 h-4 text-brand-gold fill-current" />
+                    {drama.rating}
+                  </div>
+                </div>
+
+                {/* Title at Bottom */}
+                <div className="absolute bottom-0 inset-x-0 p-4 pt-10 bg-gradient-to-t from-[#13141f] via-[#13141f]/40 to-transparent z-10">
+                  <h3 className="text-white font-bold text-xl leading-tight drop-shadow-md">{drama.title}</h3>
+                </div>
+                
+                {/* Play button overlay on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 pointer-events-none">
+                  <div className="w-14 h-14 rounded-full bg-brand-cyan text-white flex items-center justify-center shadow-[0_0_20px_rgba(0,184,169,0.6)] transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                    <Play className="w-6 h-6 ml-1 fill-current" />
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1">
-                <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                {drama.rating}
+
+              <div className="px-5 pb-5 pt-1">
+                <div className="text-slate-400 text-sm mb-4 truncate text-shadow-sm font-medium">
+                  {drama.year} • {drama.tags.join(', ')}
+                </div>
+
+                <div className="border-t border-slate-800 pt-4 flex items-center">
+                  {/* Episodes */}
+                  <div className="flex-1 flex items-center justify-center gap-2">
+                    <Tv className="w-4 h-4 text-[#8f93a2]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-[#8f93a2] leading-tight">Серий:</span>
+                      <span className="text-xs font-bold text-white leading-tight">{totalEpisodes}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="w-px h-6 bg-slate-800" />
+
+                  {/* Words */}
+                  <div className="flex-1 flex items-center justify-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[#8f93a2]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-[#8f93a2] leading-tight">Слов</span>
+                      <span className="text-xs font-bold text-white leading-tight">{wordsLearned}</span>
+                    </div>
+                  </div>
+
+                  <div className="w-px h-6 bg-slate-800" />
+
+                  {/* Phrases */}
+                  <div className="flex-1 flex items-center justify-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-[#8f93a2]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-[#8f93a2] leading-tight">Фраз</span>
+                      <span className="text-xs font-bold text-white leading-tight">{phrasesLearned}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <h3 className="text-slate-900 dark:text-white font-medium truncate group-hover:text-brand-cyan transition-colors">{drama.title}</h3>
-            <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-              <span>{drama.year}</span>
-              <span>•</span>
-              <span className="truncate">{drama.tags.join(', ')}</span>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

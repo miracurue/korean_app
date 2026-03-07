@@ -19,7 +19,6 @@ export default function Dictionary() {
 
   return (
     <div className="p-8 space-y-8 relative">
-      <div className="absolute top-40 left-20 w-72 h-72 bg-transparent dark:bg-brand-gold/10 rounded-full blur-3xl animate-blob pointer-events-none" style={{ animationDelay: '1s' }} />
       <div className="flex justify-between items-end relative z-10">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Мой словарь</h1>
@@ -90,7 +89,7 @@ export default function Dictionary() {
       </div>
 
       <div className="bg-white/60 dark:bg-slate-900/50 backdrop-blur-xl border border-white/40 dark:border-slate-800/50 rounded-2xl overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-950/50">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-700/50">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input 

@@ -30,7 +30,7 @@ export default function PoemReader() {
   return (
     <div className="h-screen flex flex-col bg-transparent transition-colors duration-300">
       {/* Top Header */}
-      <header className="h-16 border-b border-white/40 dark:border-slate-800/50 flex flex-shrink-0 items-center px-6 justify-between bg-white/60 dark:bg-slate-950/40 backdrop-blur-2xl z-20">
+      <header className="h-16 border-b border-white/40 dark:border-slate-800/50 flex flex-shrink-0 items-center px-6 justify-between bg-white/60 dark:bg-slate-700/40 backdrop-blur-2xl z-20">
         <div className="flex items-center gap-3">
           <BookOpen className="w-5 h-5 text-brand-gold" />
           <h1 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -51,7 +51,6 @@ export default function PoemReader() {
         <div className="flex-1 overflow-y-auto scrollbar-hide px-6 py-10 md:px-12 flex flex-col relative bg-slate-50/50 dark:bg-slate-900/10">
           
           {/* Aesthetic background glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-brand-gold/5 rounded-full blur-[100px] pointer-events-none" />
 
           {/* Audio Player pinned to top of text area */}
           {activePoem.hasAudio && (
@@ -115,7 +114,7 @@ export default function PoemReader() {
         </div>
 
         {/* Word Analysis Sidebar */}
-        <div className="w-full md:w-96 border-t md:border-t-0 md:border-l border-white/40 dark:border-slate-800/50 bg-white/70 dark:bg-slate-950/50 backdrop-blur-2xl flex flex-col flex-shrink-0 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
+        <div className="w-full md:w-96 border-t md:border-t-0 md:border-l border-white/40 dark:border-slate-800/50 bg-white/70 dark:bg-slate-700/50 backdrop-blur-2xl flex flex-col flex-shrink-0 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
           {hoveredWord ? (
             <div className="p-6 h-full flex flex-col overflow-y-auto scrollbar-hide animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="mb-6">

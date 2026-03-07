@@ -6,12 +6,16 @@ export default function Home() {
     <div className="p-8 space-y-12">
       {/* Header */}
       <header className="flex justify-between items-end relative">
-        <div className="absolute -top-10 -left-10 w-32 h-32 bg-transparent dark:bg-brand-pink/20 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
         <div className="relative z-10 flex-1">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
-            С возвращением, <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-cream">Дорамщик!</span>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-4 flex flex-wrap items-center gap-x-3 gap-y-4">
+            <span className="text-2xl opacity-90">С возвращением,</span>
+            <span className="inline-flex items-center gap-0 px-0 py-2 rounded-full bg-gradient-to-b from-brand-pink to-[#9d0b4a] text-white border-[3.5px] border-white/95 shadow-[inset_0_2px_6px_rgba(255,255,255,0.4),inset_0_-2px_6px_rgba(0,0,0,0.4),0_12px_24px_-4px_rgba(0,0,0,0.3),0_0_20px_rgba(219,39,119,0.3)] -rotate-3 translate-y-[15px] transition-all duration-300 hover:-rotate-1 hover:translate-y-[12px] hover:scale-105 active:scale-95 group/pill relative isolate cursor-pointer">
+              <span className="text-4xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover/pill:scale-125 translate-x-1 translate-y-0 -rotate-12 select-none">🫰</span>
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] font-black text-3xl pb-1 px-1 tracking-tighter select-none">Дорамщик!</span>
+              <span className="text-5xl filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover/pill:scale-125 translate-x-0 -translate-y-4 rotate-12 select-none">🎬</span>
+            </span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-lg">Продолжай погружаться в корейский язык.</p>
+          <p className="text-slate-500 dark:text-slate-400 text-lg mt-6">Продолжай погружаться в корейский язык.</p>
         </div>
 
         <div className="flex gap-4 relative z-10">
@@ -47,13 +51,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Continue Drama */}
-            <Link to="/player/video" className="group relative block rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-950 border border-slate-800 hover:border-brand-cyan/50 transition-all duration-500 shadow-md">
-              <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity rounded-3xl overflow-hidden isolate">
+            <Link to="/player/video/1/4" className="group relative block rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-950 border border-slate-800 hover:border-brand-cyan/50 transition-all duration-500 shadow-md">
+              <div className="absolute inset-0 opacity-80 group-hover:opacity-90 transition-opacity rounded-3xl overflow-hidden isolate">
                 <img src="/pics/Guardian The Lonely and Great God.png" alt="" className="w-full h-full object-cover text-transparent group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
               <div className="relative z-10 p-6 flex flex-col h-56 justify-end">
-                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
+                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-cyan text-white text-[10px] font-bold uppercase tracking-wider">
                   Видео
                 </div>
                 <h3 className="text-xl font-bold text-white mb-1 group-hover:text-brand-cyan transition-colors">Токкэби</h3>
@@ -69,11 +73,11 @@ export default function Home() {
 
             {/* Continue Audio */}
             <Link to="/player/audio" className="group relative block rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-950 border border-slate-800 hover:border-brand-pink/50 transition-all duration-500 shadow-md">
-              <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity rounded-3xl overflow-hidden isolate">
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+              <div className="absolute inset-0 opacity-80 group-hover:opacity-90 transition-opacity rounded-3xl overflow-hidden isolate">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
               <div className="relative z-10 p-6 flex flex-col h-56 justify-end">
-                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-pink/20 text-brand-pink text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
+                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-pink text-white text-[10px] font-bold uppercase tracking-wider">
                   Аудио
                 </div>
                 <h3 className="text-xl font-bold text-white mb-1 group-hover:text-brand-pink transition-colors">Butter - BTS</h3>
@@ -88,12 +92,12 @@ export default function Home() {
             </Link>
 
             {/* Continue Poem */}
-            <Link to="/poem/4" className="group relative block rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-950 border border-slate-800 hover:border-brand-gold/50 transition-all duration-500 shadow-md">
-               <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity rounded-3xl overflow-hidden isolate">
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+            <Link to="/poem/4" className="group relative block rounded-3xl overflow-hidden bg-slate-900 dark:bg-slate-700 border border-slate-800 hover:border-brand-gold/50 transition-all duration-500 shadow-md">
+               <div className="absolute inset-0 opacity-80 group-hover:opacity-90 transition-opacity rounded-3xl overflow-hidden isolate">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
               <div className="relative z-10 p-6 flex flex-col h-56 justify-end">
-                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
+                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-brand-gold text-white text-[10px] font-bold uppercase tracking-wider">
                   Стихи
                 </div>
                 <h3 className="text-xl font-bold text-white mb-1 group-hover:text-brand-gold transition-colors">Азалея</h3>

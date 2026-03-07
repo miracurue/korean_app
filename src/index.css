@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-brand-pink: #f6416c;
+  --color-brand-pink: #b80d57;
   --color-brand-cream: #f8f3d4;
   --color-brand-cyan: #00b8a9;
   --color-brand-gold: #ffde7d;
