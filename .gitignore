@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Custom ignores
+.agent/
+.idea/
+.vscode/
+
+features.md

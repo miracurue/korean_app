@@ -2,7 +2,7 @@ import { Search, Filter, Play, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DRAMAS = [
-  { id: 1, title: 'Токкэби (Гоблин)', year: 2016, rating: 4.9, tags: ['Фэнтези', 'Романтика', 'Драма'], image: 'https://picsum.photos/seed/goblin/400/600' },
+  { id: 1, title: 'Токкэби (Гоблин)', year: 2016, rating: 4.9, tags: ['Фэнтези', 'Романтика', 'Драма'], image: '/pics/Guardian The Lonely and Great God.png' },
   { id: 2, title: 'Аварийная посадка любви', year: 2019, rating: 4.8, tags: ['Романтика', 'Комедия'], image: 'https://picsum.photos/seed/crash/400/600' },
   { id: 3, title: 'Итэвон Класс', year: 2020, rating: 4.7, tags: ['Драма', 'Бизнес'], image: 'https://picsum.photos/seed/itaewon/400/600' },
   { id: 4, title: 'Винченцо', year: 2021, rating: 4.8, tags: ['Криминал', 'Комедия'], image: 'https://picsum.photos/seed/vincenzo/400/600' },

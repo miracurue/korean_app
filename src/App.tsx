@@ -13,6 +13,8 @@ import Dictionary from './pages/Dictionary';
 import Quotes from './pages/Quotes';
 import Upload from './pages/Upload';
 import Player from './pages/Player';
+import Poems from './pages/Poems';
+import PoemReader from './pages/PoemReader';
 
 export default function App() {
   return (
@@ -26,7 +28,9 @@ export default function App() {
             <Route path="dictionary" element={<Dictionary />} />
             <Route path="quotes" element={<Quotes />} />
             <Route path="upload" element={<Upload />} />
-            <Route path="player/:id" element={<Player />} />
+            <Route path="player/:id?" element={<Player />} />
+            <Route path="poems" element={<Poems />} />
+            <Route path="poem/:id?" element={<PoemReader />} />
           </Route>
         </Routes>
       </Router>
