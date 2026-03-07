@@ -1,0 +1,35 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './components/ThemeProvider';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import Dramas from './pages/Dramas';
+import Music from './pages/Music';
+import Dictionary from './pages/Dictionary';
+import Quotes from './pages/Quotes';
+import Upload from './pages/Upload';
+import Player from './pages/Player';
+
+export default function App() {
+  return (
+    <ThemeProvider defaultTheme="dark">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="dramas" element={<Dramas />} />
+            <Route path="music" element={<Music />} />
+            <Route path="dictionary" element={<Dictionary />} />
+            <Route path="quotes" element={<Quotes />} />
+            <Route path="upload" element={<Upload />} />
+            <Route path="player/:id" element={<Player />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
+  );
+}
