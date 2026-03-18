@@ -4,18 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-brand-pink: #b80d57;
-  --color-brand-cream: #f8f3d4;
-  --color-brand-cyan: #00b8a9;
-  --color-brand-gold: #ffde7d;
+  --color-brand-cyan: #70a1d7;
+  --color-brand-pink: #ff467e;
+  --color-brand-gold: #d97706;
+  --color-brand-green: #a1de93;
+  
+  --color-brand-blue: #70a1d7; /* Legacy/Sync */
+  --color-brand-red: #ff467e;  /* Legacy/Sync */
+  
+  --color-text-main: #1A1B22;
+  --color-text-muted: #64748b;
+  
+  /* Harmonizing Tag/Badge Colors to the new palette */
+  --color-badge-blue-from: #70a1d7;
+  --color-badge-blue-to: #a1de93;
+  
+  --color-tag-purple-from: #a1de93;
+  --color-tag-purple-to: #70a1d7;
+  
+  --color-tag-mint-from: #a1de93;
+  --color-tag-mint-to: #f7f48b;
+
+  --color-tag-pink-from: #ff467e;
+  --color-tag-pink-to: #f7f48b;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-korean: "Noto Sans KR", sans-serif;
+  --font-handwriting: "Caveat", "Bad Script", cursive;
   
   --animate-blob: blob 7s infinite;
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-delayed: float 6s ease-in-out 3s infinite;
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-gradient-xy: gradient-xy 15s ease infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
 }
 
 @keyframes blob {
@@ -31,12 +53,45 @@
   100% { transform: translateY(0px); }
 }
 
+@keyframes gradient-xy {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 @layer utilities {
   .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;    /* Firefox */
   }
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+    display: none;            /* Chrome, Safari and Opera */
+  }
+  .animate-gradient-xy {
+    background-size: 400% 400%;
+    animation: gradient-xy 15s ease infinite;
+  }
+  .scrollbar-stylish::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-stylish::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-stylish::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+  }
+  .dark .scrollbar-stylish::-webkit-scrollbar-thumb {
+    background: #1e293b;
+  }
+  .scrollbar-stylish::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+  }
+  .dark .scrollbar-stylish::-webkit-scrollbar-thumb:hover {
+    background: #334155;
   }
 }

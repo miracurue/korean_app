@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Play, Pause, Volume2, Bookmark, Sparkles, BookOpen, MessageCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { MUSIC } from '../data/music';
+import { useProgress } from '../lib/useProgress';
 
 interface SubtitleWord {
   text: string;
@@ -86,6 +87,8 @@ export default function Player() {
   const [volume, setVolume] = useState(1);
   const [hasLrc, setHasLrc] = useState(true);
   const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+  const { saveProgress } = useProgress('audio');
+  const lastSaveTime = useRef(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -134,6 +137,21 @@ export default function Player() {
     if (audioRef.current) {
       const time = audioRef.current.currentTime;
       setCurrentTime(time);
+      
+      if (song) {
+        const now = Date.now();
+        if (now - lastSaveTime.current > 3000) { // save every 3s
+          saveProgress({
+            id: song.id,
+            title: song.title,
+            source: song.artist,
+            timestamp: time,
+            duration: audioRef.current.duration || 0,
+            isLocal: id === 'local'
+          });
+          lastSaveTime.current = now;
+        }
+      }
       
       const index = subtitles.findIndex(sub => time >= sub.start && time < sub.end);
       if (index !== -1 && index !== activeSubtitleIndex) {

@@ -37,7 +37,7 @@ export const POEMS: Poem[] = [
     author: 'Народная (Детская)',
     tags: ['Детские стихи', 'Песни', 'Семья', 'Основы'],
     hasAudio: true,
-    image: '/pics/bear.png', // Fallback if no images, but using transparent for now in UI
+    image: 'https://images.unsplash.com/photo-1585155770447-2f66e2a397b5?auto=format&fit=crop&q=80&w=800',
     artisticTranslation: "Три медведя живут в одном доме:\nПапа-медведь, мама-медведица, малыш-медвежонок.\nПапа-медведь — толстый,\nМама-медведица — стройная,\nМалыш-медвежонок — такой милый!\nУх ты, ух ты, как здорово!",
     stanzas: [
       {
@@ -120,7 +120,7 @@ export const POEMS: Poem[] = [
     author: 'Народная (Детская)',
     tags: ['Детские стихи', 'Песни', 'Природа'],
     hasAudio: true,
-    image: '/pics/butterfly.png',
+    image: 'https://images.unsplash.com/photo-1551216223-37c8d1dbec5c?auto=format&fit=crop&q=80&w=800',
     artisticTranslation: "Бабочка, бабочка, лети сюда!\nЖелтая бабочка, белая бабочка, танцуя, летите сюда.",
     stanzas: [
       {
@@ -158,7 +158,7 @@ export const POEMS: Poem[] = [
     author: 'Детская поэзия',
     tags: ['Детские стихи', 'Еда', 'Основы'],
     hasAudio: false,
-    image: '/pics/milk.png',
+    image: 'https://images.unsplash.com/photo-1550583724-125581db2552?auto=format&fit=crop&q=80&w=800',
     artisticTranslation: "Белое молоко, вкусное молоко.\nЕсли выпью молоко — вырасту большим!",
     stanzas: [
       {
@@ -196,7 +196,7 @@ export const POEMS: Poem[] = [
     author: 'Ким Со Воль (김소월)',
     tags: ['Классика', 'Лирика', 'Прощание'],
     hasAudio: true,
-    image: '/pics/azalea.png',
+    image: 'https://images.unsplash.com/photo-1596701062351-be5f6a2103d5?auto=format&fit=crop&q=80&w=800',
     artisticTranslation: "Когда вы уйдёте, устав от меня,\nЯ молча покорно вас провожу.\nВ горах Яксан в Ёнбёне\nНарву охапку цветов азалии\nИ рассыплю на вашем пути.",
     stanzas: [
       {
@@ -264,7 +264,7 @@ export const POEMS: Poem[] = [
     author: 'Юн Дон Чжу (윤동주)',
     tags: ['Классика', 'Космос', 'Философия'],
     hasAudio: true,
-    image: '/pics/stars.png',
+    image: 'https://images.unsplash.com/photo-1543722530-d2c4b1b8181b?auto=format&fit=crop&q=80&w=800',
     artisticTranslation: "Желаю до самого дня моей смерти\nСмотреть в небеса без единого пятнышка стыда.\nДаже от ветра, что шелестит в листве,\nМое сердце страдало.",
     stanzas: [
       {

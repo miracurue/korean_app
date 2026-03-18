@@ -8,16 +8,15 @@ export default function Layout() {
   
   const catalogNav = [
     { to: '/', icon: Home, label: 'Главная' },
-    { to: '/dramas', icon: Film, label: 'Дорамы' },
-    { to: '/music', icon: Music, label: 'Музыка' },
+    { to: '/clips', icon: Film, label: 'Дорамы' },
     { to: '/poems', icon: Feather, label: 'Стихи' },
     { to: '/quotes', icon: MessageSquareQuote, label: 'Цитатник' },
   ];
 
   const studyRoomsNav = [
-    { to: '/player/video', icon: MonitorPlay, label: 'Видеоплеер' },
-    { to: '/player/audio', icon: Headphones, label: 'Аудиоплеер' },
-    { to: '/poem', icon: BookOpen, label: 'Ридер стихов' },
+    { to: '/rooms/video', icon: MonitorPlay, label: 'Видеоплеер' },
+    { to: '/rooms/audio', icon: Headphones, label: 'Аудиоплеер' },
+    { to: '/rooms/reader', icon: BookOpen, label: 'Ридер' },
     { to: '/dictionary', icon: Book, label: 'Словарь' },
   ];
 
@@ -27,7 +26,7 @@ export default function Layout() {
 
   const renderNavGroup = (items: typeof catalogNav, title?: string) => (
     <div className="mb-6">
-      {title && <h3 className="px-4 text-xs font-semibold text-white uppercase tracking-wider mb-2">{title}</h3>}
+      {title && <h3 className="px-4 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] mb-2">{title}</h3>}
       <div className="space-y-1">
         {items.map((item) => (
           <NavLink
@@ -51,12 +50,12 @@ export default function Layout() {
   );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-50 flex font-sans transition-colors duration-300">
+    <div className="min-h-screen font-sans transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/40 dark:border-slate-800/50 bg-white/60 dark:bg-slate-950/40 backdrop-blur-2xl flex flex-col fixed h-full z-50 transition-colors duration-300 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)]">
+      <aside className="w-64 border-r border-white/80 dark:border-slate-800/50 bg-white/60 dark:bg-slate-950/40 backdrop-blur-md dark:backdrop-blur-2xl flex flex-col fixed h-full z-50 transition-colors duration-300 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)]">
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center font-black text-xl text-white shadow-sm border-2 border-brand-gold">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-cyan to-brand-pink flex items-center justify-center font-black text-xl text-white shadow-sm border-2 border-white dark:border-slate-800">
               K
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -65,7 +64,7 @@ export default function Layout() {
           </div>
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
@@ -77,19 +76,27 @@ export default function Layout() {
           {renderNavGroup(adminNav, 'Управление')}
         </nav>
 
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800/50">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
+        <div className="p-4 border-t border-slate-200/50 dark:border-slate-800/50">
+          <NavLink
+            to="/profile/me"
+            className={({ isActive }) =>
+              cn(
+                'flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-colors',
+                isActive
+                  ? 'bg-white dark:bg-slate-800/80 text-brand-cyan dark:text-brand-cyan shadow-sm border border-slate-200 dark:border-transparent'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-white/80 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-200'
+              )
+            }
+          >
             <User className="w-5 h-5" />
-            <span className="font-medium">Профиль</span>
-          </button>
+            <span className="font-medium">Мой профиль</span>
+          </NavLink>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 ml-64 relative min-h-screen">
-        {/* Animated Background */}
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-white dark:bg-slate-700 transition-colors duration-500">
-        </div>
+        <div className="fixed inset-0 z-0 pointer-events-none bg-white dark:bg-slate-950 transition-colors duration-700" />
 
         <div className="relative z-10 h-full">
           <Outlet />

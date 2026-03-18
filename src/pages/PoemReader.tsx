@@ -1,185 +1,335 @@
-import { useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { Play, Pause, Bookmark, Sparkles, BookOpen, Volume2, CheckCircle2, MessageCircle } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  ArrowLeft, Plus, Minus, Play, Pause, RotateCcw, 
+  Volume2, Sparkles, Loader2, BookOpen
+} from 'lucide-react';
+import { Group, Panel, Separator } from 'react-resizable-panels';
 import { cn } from '../lib/utils';
-import { POEMS } from '../data/poems';
+
+interface PoemWord {
+  text: string;
+  baseForm?: string;
+  translation?: string;
+  grammar?: string;
+}
+
+interface PoemLine {
+  korean: string;
+  translation: string;
+  words: PoemWord[];
+}
+
+interface Poem {
+  id: number;
+  title: string;
+  koreanTitle: string;
+  author: string;
+  content: PoemLine[];
+  image: string;
+  audioUrl: string;
+  artisticTranslation: string;
+}
+
+const POEMS: Poem[] = [
+  {
+    id: 1,
+    title: "Цветок",
+    koreanTitle: "꽃",
+    author: "Ким Чхун Су (김춘수)",
+    image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&q=80&w=800",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    artisticTranslation: "До того как я назвал его по имени,\nон был всего лишь робким движением.\nКогда я назвал его по имени,\nон пришел ко мне и стал цветком.",
+    content: [
+      {
+        korean: "내가 그의 이름을 불러 주기 전에는",
+        translation: "До того как я назвал его по имени",
+        words: [
+          { text: "내가", baseForm: "나", translation: "Я (им. падеж)", grammar: "Местоимение + частица 가" },
+          { text: "그의", baseForm: "그", translation: "Его", grammar: "Местоимение + притяжательная частица 의" },
+          { text: "이름을", baseForm: "이름", translation: "Имя (вин. падеж)", grammar: "Существительное + частица 을" },
+          { text: "불러", baseForm: "부르다", translation: "Звать, называть", grammar: "Глагол в а/о форме" },
+          { text: "주기", baseForm: "주다", translation: "Давать (делание для кого-то)", grammar: "Глагол + окончание 기" },
+          { text: "전에는", baseForm: "전", translation: "До, прежде", grammar: "Существительное + частица 에는" }
+        ]
+      },
+      {
+        korean: "그는 다만 하나의 몸짓에 지나지 않았다",
+        translation: "он был всего лишь робким движением",
+        words: [
+          { text: "그는", baseForm: "그", translation: "Он (тем. падеж)", grammar: "Местоимение + частица 는" },
+          { text: "다만", baseForm: "다만", translation: "Только, лишь", grammar: "Наречие" },
+          { text: "하나의", baseForm: "하나", translation: "Одного", grammar: "" },
+          { text: "몸짓에", baseForm: "몸짓", translation: "Движение, жест", grammar: "" },
+          { text: "지나지", baseForm: "지나다", translation: "Проходить, превышать", grammar: "" },
+          { text: "않았다", baseForm: "않다", translation: "Не делать", grammar: "Отрицание в прошедшем времени" }
+        ]
+      }
+    ]
+  }
+];
 
 export default function PoemReader() {
-  const { id } = useParams();
-  
-  // Find poem by ID or default to the first one if no matching ID
-  const activePoem = id ? POEMS.find(p => p.id === parseInt(id)) : POEMS[0];
-  
+  const [activePoem] = useState<Poem>(POEMS[0]);
+  const [fontSize, setFontSize] = useState(24);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hoveredWord, setHoveredWord] = useState<any | null>(null);
-  const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+  const [progress, setProgress] = useState(0);
+  const [volume, setVolume] = useState(0.8);
+  const [selectedWord, setSelectedWord] = useState<PoemWord | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Early return or redirect if not found (though default handled above)
-  if (!activePoem) return <Navigate to="/poems" />;
-
-  const toggleSaveWord = (wordText: string) => {
-    const nextStyles = new Set(savedWords);
-    if (nextStyles.has(wordText)) {
-      nextStyles.delete(wordText);
-    } else {
-      nextStyles.add(wordText);
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) audioRef.current.pause();
+      else audioRef.current.play();
+      setIsPlaying(!isPlaying);
     }
-    setSavedWords(nextStyles);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      const p = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+      setProgress(p);
+    }
+  };
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (audioRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const p = (e.clientX - rect.left) / rect.width;
+      audioRef.current.currentTime = p * audioRef.current.duration;
+    }
+  };
+
+  const handleWordClick = (e: React.MouseEvent, word: PoemWord) => {
+    e.stopPropagation();
+    setSelectedWord(word);
+  };
+
+  const handleGenerateBreakdown = () => {
+    setIsGenerating(true);
+    setTimeout(() => setIsGenerating(false), 2000);
+  };
+
+  const formatTime = (time: number) => {
+    if (isNaN(time)) return "0:00";
+    const m = Math.floor(time / 60);
+    const s = Math.floor(time % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
   return (
-    <div className="h-screen flex flex-col bg-transparent transition-colors duration-300">
-      {/* Top Header */}
-      <header className="h-16 border-b border-white/40 dark:border-slate-800/50 flex flex-shrink-0 items-center px-6 justify-between bg-white/60 dark:bg-slate-700/40 backdrop-blur-2xl z-20">
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-5 h-5 text-brand-gold" />
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-            {activePoem.koreanTitle} <span className="text-sm font-normal text-slate-500 ml-2">({activePoem.title})</span>
-          </h1>
-          <span className="text-sm text-slate-400 font-medium ml-2">— {activePoem.author}</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-700 dark:text-slate-300 transition-colors">
-            <Bookmark className="w-4 h-4" />
-            <span className="hidden sm:inline">В закладки</span>
-          </button>
-        </div>
-      </header>
-
-      <div className="flex-1 flex overflow-hidden flex-col md:flex-row">
-        {/* Main Reading Area */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide px-6 py-10 md:px-12 flex flex-col relative bg-slate-50/50 dark:bg-slate-900/10">
-          
-          {/* Aesthetic background glow */}
-
-          {/* Audio Player pinned to top of text area */}
-          {activePoem.hasAudio && (
-            <div className="max-w-2xl mx-auto w-full mb-12 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white dark:border-slate-800 rounded-2xl shadow-sm flex items-center gap-4 sticky top-0 z-10 text-slate-900 dark:text-white">
-              <button 
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-brand-gold text-white rounded-full shadow-lg shadow-brand-gold/30 hover:scale-105 transition-transform"
-              >
-                {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
-              </button>
-              <div className="flex-1 flex flex-col gap-1.5">
-                <div className="flex justify-between text-xs font-medium text-slate-500">
-                  <span>00:00</span>
-                  <div className="flex items-center gap-1.5 text-brand-gold">
-                    <Volume2 className="w-3.5 h-3.5" />
-                    <span>Оригинальная озвучка</span>
-                  </div>
-                  <span>02:15</span>
-                </div>
-                {/* Simulated Waveform / Progress bar */}
-                <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full cursor-pointer relative group/progress overflow-hidden">
-                   <div className="absolute top-0 bottom-0 left-0 bg-brand-gold w-1/3 rounded-full" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Poem Text Container */}
-          <div className="max-w-2xl mx-auto w-full relative z-0">
-            {activePoem.stanzas.map(stanza => (
-              <div key={stanza.id} className="mb-12 space-y-8">
-                {stanza.lines.map(line => (
-                  <div key={line.id} className="group/line">
-                    <div className="flex flex-wrap gap-x-2 gap-y-3 mb-2">
-                       {line.words.map((word, wIdx) => {
-                          const isSaved = savedWords.has(word.text);
-                          return (
-                            <span 
-                              key={wIdx}
-                              onMouseEnter={() => setHoveredWord(word)}
-                              className={cn(
-                                "text-2xl sm:text-3xl font-korean transition-all duration-200 cursor-pointer rounded-lg px-1.5 -mx-1.5",
-                                hoveredWord?.text === word.text ? "bg-brand-gold/20 text-slate-900 dark:text-white" : "text-slate-800 dark:text-slate-200 hover:text-brand-gold",
-                                isSaved && "text-brand-cyan border-b-2 border-brand-cyan/50 pb-0.5"
-                              )}
-                            >
-                              {word.text}
-                            </span>
-                          );
-                       })}
-                    </div>
-                    {/* Line Translation - visible softly, full opacity on line hover */}
-                    <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 opacity-60 group-hover/line:opacity-100 transition-opacity">
-                      {line.translation}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ))}
+    <div className="p-4 md:p-6 pb-0 w-full max-w-[1600px] mx-auto lg:h-[calc(100vh-24px)] flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* External Header - Seamless Dark */}
+      <div className="mb-4 shrink-0 flex items-center justify-between px-2">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <Link to="/poems" className="p-2 -ml-2 text-zinc-500 hover:text-white transition-colors rounded-full hover:bg-white/5">
+            <ArrowLeft size={20} />
+          </Link>
+          <div className="flex flex-col">
+             <h1 className="text-lg font-bold text-white leading-tight">
+               {activePoem.koreanTitle} <span className="text-sm text-zinc-500 font-normal ml-1">({activePoem.title})</span>
+             </h1>
+              <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">— {activePoem.author}</span>
           </div>
         </div>
 
-        {/* Word Analysis Sidebar */}
-        <div className="w-full md:w-96 border-t md:border-t-0 md:border-l border-white/40 dark:border-slate-800/50 bg-white/70 dark:bg-slate-700/50 backdrop-blur-2xl flex flex-col flex-shrink-0 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
-          {hoveredWord ? (
-            <div className="p-6 h-full flex flex-col overflow-y-auto scrollbar-hide animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="mb-6">
-                <div className="flex items-start justify-between mb-2">
-                  <h2 className="text-4xl font-bold font-korean text-slate-900 dark:text-white">{hoveredWord.baseForm || hoveredWord.text}</h2>
-                  <button 
-                    onClick={() => toggleSaveWord(hoveredWord.text)}
-                    className={cn(
-                      "p-2 rounded-xl border transition-all duration-300",
-                      savedWords.has(hoveredWord.text) 
-                        ? "bg-brand-cyan/10 border-brand-cyan/30 text-brand-cyan" 
-                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-cyan"
-                    )}
-                  >
-                    {savedWords.has(hoveredWord.text) ? <CheckCircle2 className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
-                  </button>
-                </div>
-                <p className="text-2xl text-brand-gold font-medium">{hoveredWord.translation}</p>
-              </div>
+        <div className="flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-xl p-1 shrink-0">
+          <button 
+            onClick={() => setFontSize(prev => Math.max(12, prev - 2))}
+            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+          >
+            <Minus size={16} />
+          </button>
+          <div className="w-8 text-center text-[11px] font-bold text-zinc-500 tabular-nums">
+            {fontSize}
+          </div>
+          <button 
+            onClick={() => setFontSize(prev => Math.min(48, prev + 2))}
+            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+          >
+            <Plus size={16} />
+          </button>
+        </div>
+      </div>
+      <Group orientation="horizontal" className="flex flex-col lg:flex-row gap-0 bg-zinc-950 rounded-2xl border border-zinc-800/50 overflow-hidden shadow-2xl h-auto lg:h-full w-full max-w-[1400px] mx-auto min-h-0">
+        
+        {/* Left Column: Media (Top) + Transcript (Bottom) */}
+        <Panel defaultSize={40} minSize={20} className="flex flex-col min-h-0 bg-zinc-950">
+          
+          {/* Media Player (Audio for Poems) */}
+          <div className="w-full shrink-0 bg-zinc-900/80 p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+            {/* Background aesthetic blur */}
+            <div className="absolute inset-0 bg-indigo-500/10 opacity-30 blur-3xl pointer-events-none" />
+            
+            <audio 
+              ref={audioRef}
+              src={activePoem.audioUrl}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={() => setIsPlaying(false)}
+            />
 
-              <div className="space-y-4 flex-1">
-                <div className="bg-white/50 dark:bg-slate-900/50 rounded-2xl p-4 border border-white dark:border-slate-800/50 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 font-semibold">Грамматический разбор</p>
-                  <p className="text-slate-700 dark:text-slate-300 mb-2">{hoveredWord.grammar}</p>
-                  {hoveredWord.particles && (
-                    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 border-dashed">
-                      <span className="text-sm text-slate-500">Частицы/Окончания:</span>
-                      <span className="text-brand-cyan font-korean font-medium">{hoveredWord.particles}</span>
+            <div className="relative z-10 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden shadow-xl border border-white/10 shrink-0 group">
+              <img src={activePoem.image} alt={activePoem.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={togglePlay} className="w-12 h-12 rounded-full bg-indigo-500 text-white flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-all">
+                  {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full space-y-4 relative z-10">
+               <div>
+                  <h2 className="text-indigo-400 text-sm font-semibold uppercase tracking-wider mb-1">Оригинальное чтение</h2>
+                  <div className="flex items-center gap-4">
+                     <button onClick={togglePlay} className="p-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+                        {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
+                     </button>
+                     <div className="flex-1 space-y-2">
+                        <div className="w-full h-1.5 bg-zinc-800 rounded-full cursor-pointer relative group/progress" onClick={handleProgressClick}>
+                          <div className="absolute top-0 left-0 h-full bg-indigo-500 rounded-full transition-all duration-100" style={{ width: `${progress}%` }} />
+                          <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity" style={{ left: `calc(${progress}% - 6px)` }} />
+                        </div>
+                        <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
+                           <span>{formatTime(audioRef.current?.currentTime || 0)}</span>
+                           <span>{formatTime(audioRef.current?.duration || 0)}</span>
+                        </div>
+                     </div>
+                     <div className="hidden md:flex items-center gap-2 group/vol">
+                        <Volume2 size={16} className="text-zinc-500 group-hover/vol:text-indigo-400 transition-colors" />
+                        <div className="w-16 h-1 bg-zinc-800 rounded-full cursor-pointer relative overflow-hidden">
+                           <div className="absolute top-0 left-0 h-full bg-zinc-400" style={{ width: `${volume * 100}%` }} />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+
+          {/* Transcript / Text scrolling area */}
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-6 lg:p-10 bg-zinc-950/20">
+            <div className="max-w-3xl mx-auto space-y-12">
+              {activePoem.content.map((line, idx) => (
+                <div key={idx} className="group flex flex-col gap-4 animate-in fade-in slide-in-from-left-4 duration-500" style={{ animationDelay: `${idx * 150}ms` }}>
+                  <div 
+                    className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+                    style={{ fontSize: `${fontSize}px` }}
+                  >
+                    {line.words.map((word, wIdx) => (
+                      <span 
+                        key={wIdx}
+                        onClick={(e) => handleWordClick(e, word)}
+                        className="text-white hover:text-indigo-300 hover:bg-indigo-500/20 px-1 -mx-0.5 rounded transition-colors"
+                      >
+                        {word.text}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="text-[13px] font-medium text-white/60">
+                    {line.translation}
+                  </div>
+                </div>
+              ))}
+
+              <div className="pt-12 mt-12 border-t border-zinc-800/50">
+                <div className="flex items-center gap-2 text-indigo-400 font-bold uppercase tracking-[0.2em] text-[10px] mb-4">
+                  <span className="w-8 h-px bg-indigo-500/30" />
+                  Художественный перевод
+                </div>
+                <p className="text-zinc-400 text-lg md:text-xl italic leading-relaxed whitespace-pre-line font-serif">
+                  {activePoem.artisticTranslation}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Panel>
+
+        <Separator className="w-px bg-transparent hover:bg-indigo-500/50 transition-colors cursor-col-resize hidden lg:block" />
+
+        {/* Right Column: Dictionary / Grammar Breakdown */}
+        <Panel defaultSize={60} minSize={30} className="flex flex-col min-h-0 bg-zinc-900/95 dark:bg-zinc-900/95 backdrop-blur-md">
+          {selectedWord ? (
+            <div className="p-5 lg:p-8 flex-1 min-h-0 overflow-y-auto scrollbar-hide animate-in slide-in-from-right-4 fade-in duration-300 flex flex-col">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h3 className="text-4xl md:text-5xl font-black text-white mb-2">
+                    {selectedWord.text}
+                  </h3>
+                  {selectedWord.baseForm && (
+                    <div className="text-sm font-medium text-zinc-400 bg-zinc-800/80 inline-block px-2.5 py-1 rounded border border-zinc-700/50">
+                      н.ф: <span className="text-zinc-200">{selectedWord.baseForm}</span>
                     </div>
                   )}
                 </div>
+                <button 
+                  onClick={() => setSelectedWord(null)}
+                  className="p-2 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded-full transition-all"
+                >
+                  <RotateCcw className="w-5 h-5" />
+                </button>
+              </div>
 
-                <div className="bg-brand-gold/5 dark:bg-brand-gold/5 rounded-2xl p-4 border border-brand-gold/20">
-                  <p className="text-xs text-brand-gold uppercase tracking-wider mb-2 font-semibold flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    ИИ Разбор контекста
-                  </p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    В поэзии форма <span className="font-korean">{hoveredWord.text}</span> часто используется для придания лиричности. В повседневной речи обычно говорят иначе.
+              <div className="grid gap-6">
+                <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl relative overflow-hidden group">
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                  <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                    Перевод
+                  </h4>
+                  <p className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                    {selectedWord.translation}
                   </p>
                 </div>
+
+                {selectedWord.grammar && (
+                  <div className="p-6 bg-zinc-800/40 border border-zinc-700/50 rounded-2xl">
+                    <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
+                      Грамматика
+                    </h4>
+                    <div className="text-base text-zinc-200 bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-xl leading-relaxed">
+                      {selectedWord.grammar}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-auto flex flex-col gap-3">
+                <button 
+                  onClick={handleGenerateBreakdown}
+                  disabled={isGenerating}
+                  className="w-full lg:w-max px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-200 font-medium rounded-xl transition-all border border-zinc-700 flex items-center justify-center gap-2"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin text-indigo-400" />
+                      Генерация разбора...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 text-indigo-400" />
+                      Сгенерировать ИИ-разбор
+                    </>
+                  )}
+                </button>
+                
+                <button className="w-full lg:w-max px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98]">
+                  Добавить в личный словарь
+                </button>
               </div>
             </div>
           ) : (
-            <div className="p-6 h-full flex flex-col justify-center items-center text-center text-slate-400 dark:text-slate-500">
-               <div className="w-16 h-16 mb-4 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
-                 <BookOpen className="w-8 h-8 opacity-50" />
-               </div>
-               <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300 mb-2">Наведите на слово</h3>
-               <p className="text-sm max-w-[200px]">Выберите любое слово в строке, чтобы увидеть детальный разбор и перевод.</p>
+            <div className="flex-1 flex flex-col justify-center items-center text-center p-8 opacity-40">
+               <h3 className="text-2xl font-bold text-zinc-300 mb-2">Разбор предложения</h3>
+               <p className="text-zinc-400 font-medium max-w-sm text-lg">
+                 Кликните на любое слово в стихотворении слева, чтобы увидеть подробный разбор конструкции и перевод.
+               </p>
             </div>
           )}
-
-          {/* Optional Artistic Translation of the whole stanza/poem at bottom */}
-          <div className="p-4 border-t border-white/40 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/30">
-            <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 font-semibold flex items-center gap-1.5">
-               <MessageCircle className="w-3.5 h-3.5" /> Художественный перевод
-            </p>
-            <p className="text-sm text-slate-700 dark:text-slate-300 italic whitespace-pre-line">
-              {activePoem.artisticTranslation}
-            </p>
-          </div>
-
-        </div>
-      </div>
+        </Panel>
+      </Group>
     </div>
   );
 }
