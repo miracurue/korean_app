@@ -1,22 +1,51 @@
+# Node dependencies
 node_modules/
-build/
+**/node_modules/
+
+# Build artifacts
 dist/
+**/dist/
+build/
 coverage/
-media/
-.DS_Store
-*.log
+
+# Static assets — media files stored in backend, served via Docker volume
+frontend/public/media/
+backend/public/media/
+
+# Environment files
 .env*
 !.env.example
 
-# Custom ignores
+# OS files
+.DS_Store
+Thumbs.db
+
+# Tooling
 .agent/
 .idea/
 .vscode/
-
-features.md
-
-# Windows & Tooling caches
-Thumbs.db
-.eslintcache
+*.log
 *.tsbuildinfo
-dist-ssr/
+.eslintcache
+
+# Temporary / backup files
+temp_*
+*.tmp
+*.bak
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor swap files
+*.swp
+*.swo
+
+# npm cache
+.npm/
+
+# AI agent rules (local only)
+.clinerules/
+
+# Project specific
+features.md

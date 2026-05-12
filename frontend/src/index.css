@@ -1,0 +1,438 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-family-menu: "Outfit", sans-serif;
+  --font-family-heading: "Outfit", sans-serif;
+  --font-family-body: "Inter", sans-serif;
+
+  /* Основные брендовые цвета */
+  --color-brand-cyan: #70a1d7;
+  /* Фирменный голубой */
+  --color-brand-pink: #ff467e;
+  /* Фирменный розовый */
+  --color-brand-gold: #d97706;
+  /* Фирменный золотой */
+  --color-brand-green: #a1de93;
+  /* Фирменный зеленый */
+
+  --color-brand-blue: #70a1d7;
+  /* Дополнительный синий (совместимость) */
+  --color-brand-red: #ff467e;
+  /* Дополнительный красный (совместимость) */
+
+  /* Основные цвета текста для светлой темы */
+  --color-text-main: #1A1B22;
+  /* Основной темный текст */
+  --color-text-muted: #64748b;
+  /* Вторичный/приглушенный текст */
+
+  /* Семантические цвета текста для темной темы */
+  --color-text-main-dark: #f8fafc;
+  /* Главный текст в темной теме (белый) */
+  --color-text-muted-dark: #94a3b8;
+  /* Вторичный текст в темной теме (светло-серый) */
+  --color-text-caption-dark: #94a3b8;
+  /* Мелкие подписи в темной теме (серый) */
+
+  /* Настройки шрифтов (Начертание/Жирность) */
+  --font-weight-title: 900;
+  /* Для самых крупных заголовков (Black) */
+  --font-weight-heading: 700;
+  /* Для обычных заголовков (Bold) */
+  --font-weight-subheading: 600;
+  /* Для выделенного текста (Semibold) */
+  --font-weight-body: 400;
+  /* Для обычного текста (Regular) */
+
+  /* Настройки размеров шрифтов */
+  --font-size-hero: 2.25rem;
+  /* Очень крупный (4xl) — 36px */
+  --font-size-title: 1.875rem;
+  /* Заголовки страниц (3xl) — 30px */
+  --font-size-heading: 1.5rem;
+  /* Заголовки блоков (2xl) — 24px */
+  --font-size-subheading: 1.25rem;
+  /* Подзаголовки (xl) — 20px */
+  --font-size-body-large: 1.125rem;
+  /* Увеличенный текст (lg) — 18px */
+  --font-size-body: 1rem;
+  /* Стандартный текст (base) — 16px */
+  --font-size-small: 0.875rem;
+  /* Мелкий текст (sm) — 14px */
+  --font-size-caption: 0.75rem;
+  /* Подписи (xs) — 12px */
+  --font-size-micro: 0.625rem;
+  /* Микро-подписи — 10px */
+
+  /* Цвета для тегов и бейджей (Градиенты) */
+  --color-badge-blue-from: #70a1d7;
+  /* Начало синего градиента */
+  --color-badge-blue-to: #a1de93;
+  /* Конец синего градиента */
+
+  --color-tag-purple-from: #a1de93;
+  /* Начало зеленого градиента */
+  --color-tag-purple-to: #70a1d7;
+  /* Конец зеленого градиента */
+
+  --color-tag-mint-from: #a1de93;
+  /* Начало мятного градиента */
+  --color-tag-mint-to: #f7f48b;
+  /* Конец мятного градиента */
+
+  --color-tag-pink-from: #ff467e;
+  /* Начало розового градиента */
+  --color-tag-pink-to: #f7f48b;
+  /* Конец розового градиента */
+
+  /* Настройки темной темы (Фон и блоки) */
+  --color-background-dark: #162138;
+  /* Общий фон сайта */
+  --color-card-dark: #111827;
+  /* Фон внешних блоков и карточек */
+  --color-border-dark: #1e293b;
+  /* Цвет рамок и разделителей */
+  --border-width-main: 1px;
+  /* Стандартная толщина границ */
+
+  /* Внутренние области карточек главной страницы (цитаты) */
+  --color-card-inner-bg-dark: #121F2E;
+  /* Фон внутренней области карточки (например, цитаты) */
+  --color-card-inner-border-dark: rgba(30, 41, 59, 0.5);
+  /* Граница внутренней области карточки */
+
+  /* Названия шрифтов */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Основной шрифт */
+  --font-korean: "Noto Sans KR", sans-serif;
+  /* Шрифт для корейского текста */
+  --font-handwriting: "Caveat", "Bad Script", cursive;
+  /* Рукописный шрифт */
+
+  /* Анимации */
+  --animate-blob: blob 7s infinite;
+  /* Анимация "пузыря" */
+  --animate-float: float 6s ease-in-out infinite;
+  /* Анимация парения */
+  --animate-float-delayed: float 6s ease-in-out 3s infinite;
+  /* Парение с задержкой */
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Дыхание */
+  --animate-gradient-xy: gradient-xy 15s ease infinite;
+  /* Движущийся градиент */
+  --animate-shimmer: shimmer 2s linear infinite;
+  /* Эффект мерцания */
+
+  /* Стили Боковой Панели (Меню) */
+  --color-sidebar-bg: rgba(255, 255, 255, 0.6);
+  /* Фон меню в светлой теме */
+  --color-sidebar-bg-dark: #121B2B;
+  /* Фон меню в темной теме */
+  --color-sidebar-title-dark: #FFFFFF;
+  /* Цвет заголовков групп в меню (темная тема) */
+  --font-size-sidebar-title: 0.875rem;
+  /* Размер шрифта заголовков групп в меню */
+  --font-weight-sidebar-title: 700;
+  /* Жирность шрифта заголовков групп в меню — Bold */
+
+  --color-sidebar-item-text-dark: #E6E7F0;
+  /* Цвет обычных пунктов меню (темная тема) */
+  --color-sidebar-item-active-dark: #70a1d7;
+  /* Цвет активного (выбранного) пункта меню */
+  --color-sidebar-item-hover-dark: #e2e8f0;
+  /* Цвет пункта меню при наведении */
+  --font-size-sidebar-item: 1rem;
+  /* Размер шрифта пунктов меню — 16px */
+  --font-weight-sidebar-item: 500;
+  /* Жирность шрифта пунктов меню — Medium */
+
+  /* Межбуквенное расстояние (Letter Spacing) */
+  --letter-spacing-standard: 0.01em;
+  /* Стандартное расстояние (немного увеличено, чтобы текст не "слипался") */
+  --letter-spacing-tight: -0.01em;
+  /* Слегка сжатое (для заголовков) */
+  --letter-spacing-wide: 0.025em;
+  /* Слегка расширенное */
+  --letter-spacing-widest: 0.1em;
+  /* Очень широкое (для подписей капсом) */
+
+  /* Специфическое расстояние для элементов */
+  --letter-spacing-sidebar-item: 0.2em;
+  /* Подзаголовки меню (Главная, Дорамы и т.д.) */
+  --letter-spacing-home-section-subtitle: 0.10em;
+  /* Текст "На чем мы остановились" */
+  --letter-spacing-post-header: 0.2em;
+  /* Шапка постов в ленте ("Имя поделился...") */
+
+  /* Блок профиля на Главной странице */
+  --color-profile-bg-dark: #152233;
+  /* Фон всего блока профиля */
+  --color-profile-border-dark: #111827;
+  /* Цвет границы блока профиля */
+  --border-width-profile: 3px;
+  /* Толщина рамки блока профиля */
+  --color-profile-avatar-border-dark: rgba(255, 255, 255, 0.1);
+  /* Рамка вокруг аватара */
+  --color-profile-streak-bg-dark: rgba(255, 70, 126, 0.8);
+  /* Фон блока "Стрик" (начало градиента) */
+  --color-profile-streak-bg-to-dark: rgba(255, 70, 126, 0.4);
+  /* Фон блока "Стрик" (конец градиента) */
+  --color-profile-words-bg-dark: rgba(161, 222, 147, 0.8);
+  /* Фон блока "Слов" (начало градиента) */
+  --color-profile-words-bg-to-dark: rgba(161, 222, 147, 0.4);
+  /* Фон блока "Слов" (конец градиента) */
+  --color-profile-xp-bar-bg-dark: #1e293b;
+  /* Фон полоски прогресса XP */
+  --color-profile-xp-fill-from: #70a1d7;
+  /* Начальный цвет прогресса XP */
+  --color-profile-xp-fill-to: #a1de93;
+  /* Конечный цвет прогресса XP */
+
+  /* Заголовки страниц (Clips, Poems, Quotes) */
+  --font-size-page-title: 1.875rem;
+  /* Размер шрифта заголовка страницы (30px) */
+  --font-weight-page-title: 700;
+  /* Жирность шрифта заголовка страницы — Bold */
+  --letter-spacing-page-title: -0.01em;
+  /* Межбуквенное расстояние заголовка */
+  --color-page-title-dark: #FFFFFF;
+  /* Цвет заголовка страницы (темная тема) */
+
+  /* Карточки дорам (раздел Дорамы) */
+  --color-drama-card-bg-dark: #111827;
+  /* Фон карточки дорамы (темная тема) */
+  --color-drama-card-border-dark: rgba(31, 41, 55, 0.8);
+  /* Цвет границы карточки */
+  --color-drama-card-hover-border-dark: #70a1d7;
+  /* Цвет границы при наведении */
+  --border-width-drama-card: 1px;
+  /* Толщина рамки карточки */
+  --drama-card-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Стандартная тень карточки */
+
+  /* Параметры свечения (Glow) */
+  --drama-card-glow-color: rgba(112, 161, 215, 0.15);
+  /* Цвет свечения при наведении (можно сделать transparent, чтобы отключить) */
+  --drama-card-glow-size: 30px;
+  /* Размер (радиус) свечения */
+  --drama-card-glow-spread: 0px;
+  /* Рассеивание свечения */
+  --drama-card-shadow-hover-dark: 0 8px var(--drama-card-glow-size) var(--drama-card-glow-spread) var(--drama-card-glow-color);
+  /* Итоговая тень со свечением при наведении */
+
+  /* Карточки стихов (раздел Поэзия) */
+  --color-poem-card-bg-dark: #111827;
+  /* Фон карточки стиха (темная тема) */
+  --color-poem-card-border-dark: rgba(31, 41, 55, 0.8);
+  /* Цвет границы карточки стиха */
+  --color-poem-card-hover-border-dark: #70a1d7;
+  /* Цвет границы при наведении */
+  --border-width-poem-card: 1px;
+  /* Толщина рамки карточки стиха */
+  --poem-card-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Стандартная тень карточки стиха */
+
+  /* Параметры свечения (Glow) для стихов */
+  --poem-card-glow-color: rgba(112, 161, 215, 0.15);
+  /* Цвет свечения при наведении */
+  --poem-card-glow-size: 30px;
+  /* Размер свечения */
+  --poem-card-glow-spread: 0px;
+  /* Рассеивание свечения */
+  --poem-card-shadow-hover-dark: 0 8px var(--poem-card-glow-size) var(--poem-card-glow-spread) var(--poem-card-glow-color);
+  /* Итоговая тень со свечением при наведении */
+
+  /* Карточки цитат (раздел Цитатник) */
+  --color-quote-card-bg-dark: #121B2B;
+  /* Фон карточки цитаты (темная тема) */
+  --color-quote-card-border-dark: rgba(46, 80, 179, 0.5);
+  /* Цвет границы карточки цитаты */
+  --color-quote-card-hover-border-dark: rgba(255, 255, 255, 0.3);
+  /* Цвет границы при наведении */
+  --border-width-quote-card: 1px;
+  /* Толщина рамки карточки цитаты */
+  --font-size-quote-main: 1.25rem;
+  /* Размер шрифта самой цитаты (20px) */
+  --font-size-quote-rus: 0.875rem;
+  /* Размер шрифта перевода цитаты (14px) */
+  --color-quote-source-dark: #70a1d7;
+  /* Цвет источника цитаты (темная тема) */
+
+  /* Видео-плеер (Синий/Индиго) */
+  --color-video-card-from: #20387A;
+  --color-video-card-via: #1e3a8a;
+  --color-video-card-to: #020617;
+  --color-video-card-border: rgba(96, 165, 250, 0.2);
+  --color-video-card-accent: #60a5fa;
+  --color-video-card-shadow: rgba(30, 58, 138, 0.4);
+  --color-video-card-history-bg: rgba(30, 58, 138, 0.4);
+
+  /* Аудио-плеер (Синий/Тил/Бирюза) */
+  --color-audio-card-from: #1A5870;
+  --color-audio-card-via: #1C607A;
+  --color-audio-card-to: #020617;
+  --color-audio-card-border: rgba(45, 212, 191, 0.2);
+  --color-audio-card-accent: #2dd4bf;
+  --color-audio-card-shadow: rgba(13, 148, 136, 0.4);
+  --color-audio-card-history-bg: rgba(13, 148, 136, 0.3);
+
+  /* Ридер (Синий/Фиолетовый/Индиго) */
+  --color-reader-card-from: #49186E;
+  --color-reader-card-via: #551D7D;
+  --color-reader-card-to: #020617;
+  --color-reader-card-border: rgba(168, 85, 247, 0.2);
+  --color-reader-card-accent: #a855f7;
+  --color-reader-card-shadow: rgba(107, 33, 168, 0.4);
+  --color-reader-card-history-bg: rgba(107, 33, 168, 0.3);
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes gradient-xy {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+  }
+
+  .animate-gradient-xy {
+    background-size: 400% 400%;
+    animation: gradient-xy 15s ease infinite;
+  }
+
+  .media-thumbnail-base {
+    @apply relative overflow-hidden rounded-2xl flex items-center justify-center shrink-0 shadow-inner transition-all duration-500 border border-white/5;
+    width: 110px;
+    height: 110px;
+  }
+
+  .media-thumbnail-video {
+    background: radial-gradient(circle at center, rgba(37, 99, 235, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+  }
+
+  .media-thumbnail-audio {
+    background: radial-gradient(circle at center, rgba(20, 184, 166, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+  }
+
+  .media-thumbnail-reader {
+    background: radial-gradient(circle at center, rgba(168, 85, 247, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+  }
+
+  .media-thumbnail-decoration {
+    @apply absolute inset-0 opacity-20 pointer-events-none;
+    background-image:
+      radial-gradient(circle at 20% 20%, white 1px, transparent 1px),
+      radial-gradient(circle at 80% 40%, white 1px, transparent 1px),
+      radial-gradient(circle at 40% 70%, white 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .scrollbar-stylish::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-stylish::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-stylish::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+  }
+
+  .dark .scrollbar-stylish::-webkit-scrollbar-thumb {
+    background: #1e293b;
+  }
+
+  .scrollbar-stylish::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+  }
+
+  .dark .scrollbar-stylish::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+
+  .mask-fade-right {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-pop {
+  animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
